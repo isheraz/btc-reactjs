@@ -4,6 +4,7 @@
   "description": "Book That Car. A place where you can book a car anytime of the day for rental or chauffeur services built and powered by reactjs and tailwind.",
   "main": "index.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:fix": "lint-staged"
   },
@@ -28,9 +29,21 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.3.7",
     "lint-staged": "^10.5.3",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.1",
+    "firebase": "^8.2.2",
+    "firebase-admin": "^9.4.2",
+    "http-errors": "~1.6.3",
+    "jade": "^1.11.0",
+    "morgan": "~1.9.1",
+    "uuid": "^8.3.2"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint:fix"
