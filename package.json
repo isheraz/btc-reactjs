@@ -1,11 +1,43 @@
 {
   "name": "btc-reactjs",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Book That Car. A place where you can book a car anytime of the day for rental or chauffeur services built and powered by reactjs and tailwind.",
-  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/user-event": "^12.6.0",
+    "dotenv": "^8.2.0",
+    "firebase": "^8.2.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.1",
+    "web-vitals": "^0.2.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "lint:fix": "lint-staged"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "repository": {
     "type": "git",
@@ -16,8 +48,8 @@
   "bugs": {
     "url": "https://github.com/isheraz/btc-reactjs/issues"
   },
-  "homepage": "https://github.com/isheraz/btc-reactjs#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
     "eslint": "^7.17.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.1.0",
@@ -30,7 +62,6 @@
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1"
   },
-  "dependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint:fix"
