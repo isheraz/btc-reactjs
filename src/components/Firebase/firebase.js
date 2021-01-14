@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 
+// Firebase configuration keys
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -11,26 +12,29 @@ const config = {
 };
 
 class Firebase {
+  /**
+   * Initialize firebase app
+   * Set firebase auth
+   */
   constructor() {
     app.initializeApp(config);
     this.auth = app.auth();
   }
 
-  doCreateUserWithEmailAndPassword(email, password) {
-    this.auth.createUserWithEmailAndPassword(email, password);
+  // Create user with email and password
+  createUser(email, password) {
+    return this.auth.createUserWithEmailAndPassword(email, password);
   }
 
-  doSignInWithEmailAndPassword(email, password) {
+  // User sign in with email and password
+  signIn = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
-  }
 
-  doSignOut() {
-    this.auth.signOut();
-  }
+  // Sign out user
+  signOut = () => this.auth.signOut();
 
-  doPasswordUpdate(password) {
-    this.auth.currentUser.updatePassword(password);
-  }
+  // Update user password
+  updatePassword = (password) => this.auth.currentUser.updatePassword(password);
 }
 
 export default Firebase;
