@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Account = () => (
+const Account: React.FC = () => (
   <div>
     <h1>Account</h1>
   </div>

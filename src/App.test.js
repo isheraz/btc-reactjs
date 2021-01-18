@@ -1,4 +1,5 @@
 import { render, screen, test, expect } from '@testing-library/react';
+// eslint-disable-next-line import/extensions
 import App from './App';
 
 test('renders learn react link', () => {

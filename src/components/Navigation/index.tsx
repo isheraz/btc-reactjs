@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import SignOut from '../SignOut';
 
-const Navigation = () => (
+const Navigation: React.FC = () => (
   <div className="flex items-center justify-between flex-wrap bg-blue-500 p-6">
     <ul className="flex">
       <li className="mr-6">
