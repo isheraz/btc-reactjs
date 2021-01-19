@@ -23,6 +23,10 @@ class Firebase {
     this.auth = app.auth();
   }
 
+  /**
+   * AUTHENTICATION METHODS
+   */
+
   // Create user with email and password
   createUser = (email: string, password: string) => this.auth.createUserWithEmailAndPassword(email, password)
 

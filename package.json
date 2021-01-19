@@ -28,12 +28,13 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
+    "watch:css": "postcss -w src/theme/tailwind.css -o src/assets/main.css",
+    "start": "react-scripts start && npm run watch:css",
+    "build": "react-scripts build && npm run build:css",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint:fix": "lint-staged",
-    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css"
+    "lint:fix": "lint-staged"
   },
   "eslintConfig": {
     "extends": [

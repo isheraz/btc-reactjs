@@ -1,16 +1,15 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
+import { FirebaseContext } from '../Firebase/context';
 
-import { FirebaseConsumer } from '../Firebase/context';
+const SignOutButton = () => {
+  const firebase = useContext(FirebaseContext);
 
-const SignOutButton = () => (
-  <FirebaseConsumer>
-    {(firebaseContext) => firebaseContext && (
-    <button className="text-white" type="button" onClick={firebaseContext.signOut}>
+  return (
+    <button className="text-white" type="button" onClick={firebase!.signOut}>
       Sign Out
     </button>
-    )}
-  </FirebaseConsumer>
-);
+  );
+};
 
 export default SignOutButton;

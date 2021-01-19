@@ -1,18 +1,12 @@
-import React, { useReducer } from 'react';
+import React, { BaseSyntheticEvent, useContext, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 
-// import firebaseContext from '../Firebase/context';
-// import Firebase from '../Firebase/firebase';
 import * as ROUTES from '../../constants/routes';
+import { FirebaseContext } from '../Firebase/context';
 
-const initialState: SignUpInterface = {
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  error: null,
-};
-
+/**
+ * Interfaces
+ */
 interface SignUpInterface {
   name: string,
   email: string,
@@ -21,10 +15,30 @@ interface SignUpInterface {
   error: null,
 }
 
-type SignUpActions =
-| { type: 'name' | 'email' | 'password' | 'confirmPassword' }
-| { type: 'field'; fieldName: string; payload: string };
+/**
+ * Types
+ */
+type SignUpActions = {
+  type: 'name' | 'email' | 'password' | 'confirmPassword' | 'reset' | 'error',
+  payload: any
+}
 
+/**
+ * Constants
+ */
+const initialState: SignUpInterface = {
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  error: null,
+};
+
+/**
+ * Reducer for dispatching onChange and onSubmit events
+ * @param state
+ * @param action
+ */
 const SignUpReducer = (state: SignUpInterface, action: SignUpActions) => {
   switch (action.type) {
     case 'name':
@@ -35,28 +49,43 @@ const SignUpReducer = (state: SignUpInterface, action: SignUpActions) => {
       return { ...state, password: action.payload };
     case 'confirmPassword':
       return { ...state, confirmPassword: action.payload };
+    case 'reset':
+      return { ...state, name: '', email: '', password: '', confirmPassword: '' };
+    case 'error':
+      return { ...state, error: action.payload };
     default:
-      throw new Error();
+      return state;
   }
 };
 
+/**
+ * Sign Up form functional component
+ */
 const SignUpForm = () => {
-  // const firebase = useContext(firebaseContext);
-  const [state, dispatch] = useReducer(SignUpReducer, initialState);
-
-  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-
-  const onInputChange = (event: any):void => {
-    dispatch({ type: 'field', fieldName: event.target.name, payload: event.target.value });
-  };
-
+  const firebase = useContext(FirebaseContext);
+  const [state, dispatch] = useReducer(SignUpReducer, { ...initialState });
   const { name, email, password, confirmPassword, error } = state;
   const isInvalid = password !== confirmPassword
       || password === ''
       || email === ''
       || name === '';
+
+  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    firebase!.createUser(email, password)
+      .then((authUser) => {
+        console.log(authUser);
+        dispatch({ type: 'reset', payload: initialState });
+        // this.props.history.push(ROUTES.HOME);
+      })
+      .catch((err) => {
+        dispatch({ type: 'error', payload: err.message });
+      });
+  };
+
+  const onInputChange = (event: BaseSyntheticEvent) => {
+    dispatch({ type: event.target.name, payload: event.target.value });
+  };
 
   return (
     <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -69,7 +98,7 @@ const SignUpForm = () => {
           <input
             type="text"
             className="block border border-grey-light w-full p-3 rounded mb-4"
-            name="username"
+            name="name"
             placeholder="Username"
             value={name}
             onChange={onInputChange}

@@ -1,46 +1,77 @@
-import React, { useReducer } from 'react';
+import React, { BaseSyntheticEvent, useContext, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as ROUTES from '../../constants/routes';
+import { FirebaseContext } from '../Firebase/context';
 
-const initialState: SignIpInterface = {
-  email: '',
-  password: '',
-  error: null,
-};
-
-interface SignIpInterface {
+/**
+ * Interfaces
+ */
+interface SignInInterface {
   email: string,
   password: string,
   error: null,
 }
 
-type SignIpActions = {
-  type: 'email' | 'password',
-  payload: string
+/**
+ * Types
+ */
+type SignInActions = {
+  type: 'email' | 'password' | 'reset' | 'error',
+  payload: any
 }
 
-const reducer = (state:SignIpInterface, action: SignIpActions) => {
+/**
+ * Constants
+ */
+const initialState: SignInInterface = {
+  email: '',
+  password: '',
+  error: null,
+};
+
+/**
+ * Reducer for dispatching onChange and onSubmit events
+ * @param state
+ * @param action
+ */
+const reducer = (state:SignInInterface, action: SignInActions) => {
   switch (action.type) {
     case 'email':
       return { ...state, email: action.payload };
     case 'password':
       return { ...state, password: action.payload };
+    case 'reset':
+      return { ...state, email: '', password: '' };
+    case 'error':
+      return { ...state, error: action.payload };
     default:
-      throw new Error();
+      return state;
   }
 };
 
+/**
+ * Sign In form functional component
+ */
 const SignInForm = () => {
+  const firebase = useContext(FirebaseContext);
   const [state, dispatch] = useReducer(reducer, { ...initialState });
   const { email, password, error } = state;
   const isInvalid = password === '' || email === '';
 
   const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(firebase, initialState);
+    firebase!.signIn(email, password)
+      .then(() => {
+        dispatch({ type: 'reset', payload: initialState });
+      })
+      .catch((err) => {
+        dispatch({ type: 'error', payload: err.message });
+      });
   };
 
-  const onInputChange = (event: any): void => {
+  const onInputChange = (event: BaseSyntheticEvent) => {
     dispatch({ type: event.target.name, payload: event.target.value });
   };
 
@@ -79,9 +110,9 @@ const SignInForm = () => {
           </button>
 
           {error && (
-          <p className="text-red-500 py-5 text-center text-xs">
-            {error}
-          </p>
+            <p className="text-red-500 py-5 text-center text-xs">
+              {error}
+            </p>
           )}
         </form>
 
