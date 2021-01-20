@@ -18,7 +18,7 @@
     "sourceType": "module",
     "allowImportExportEverywhere": true
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "prettier", "babel"],
   "settings": {
     "import/resolver": {
       "node": {
@@ -58,6 +58,8 @@
       }
     ],
     "react/react-in-jsx-scope": "off",
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "no-invalid-this": 0,
+    "babel/no-invalid-this": 1
   }
 }

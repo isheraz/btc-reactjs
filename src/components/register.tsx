@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { any } from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+// import LottieView from "lottie-react-native";
 import roles from '../roles';
 import createUser from '../services/firebase';
 
@@ -25,6 +26,7 @@ interface NextButtonProps {
     event: React.MouseEvent<HTMLButtonElement | MouseEvent>
   ) => void;
   buttonText: String;
+  isDisable: boolean;
 }
 
 function Step1(props: Step1Props) {
@@ -214,12 +216,13 @@ function Step2(props: Step2Props) {
 
 // next button for updating current step
 function NextButton(props: NextButtonProps) {
-  const { handleChange, buttonText } = props;
+  const { handleChange, buttonText, isDisable } = props;
   return (
     <button
       type="button"
-      className="btn-primary transition duration-300 ease-in-out focus:outline-none focus:shadow-outline bg-purple-700 hover:bg-purple-900 text-white font-normal py-2 px-4 mr-1 rounded"
+      className="btn-primary transition duration-300 ease-in-out focus:outline-none disabled:opacity-25 focus:shadow-outline bg-purple-700 hover:bg-purple-900 text-white font-normal py-2 px-4 mr-1 rounded"
       onClick={handleChange}
+      disabled={isDisable}
     >
       {buttonText}
     </button>
@@ -229,6 +232,7 @@ function NextButton(props: NextButtonProps) {
 // main parent register function
 function Register() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [inputField, setInputField] = useState({
     firstName: '',
     lastName: '',
@@ -241,6 +245,11 @@ function Register() {
   });
   const [error, setError] = useState('');
   const history = useHistory();
+
+  // components loaded
+  useEffect(() => {
+    console.log('Components Loaded...');
+  });
 
   // step change handling
   const handleChange = () => {
@@ -262,6 +271,8 @@ function Register() {
       setCurrentStep(currentStep + 1);
       return;
     }
+    // set form is submitted
+    setFormSubmitted(true);
 
     // step2 fields validation
     const step2Completed =
@@ -270,6 +281,13 @@ function Register() {
       showError();
       return;
     }
+
+    const dobRegex = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
+    if (!dobRegex.test(inputField.dob)) {
+      showError('Valid DOB format is dd/mm/yyyy.');
+      return;
+    }
+
     submitForm();
   };
 
@@ -299,9 +317,10 @@ function Register() {
   // show form error
   const showError = (e = 'All fields are required!!') => {
     setError(e);
+    setFormSubmitted(false);
     setTimeout(() => {
       setError('');
-    }, 3000);
+    }, 4000);
   };
   return (
     <div
@@ -317,12 +336,11 @@ function Register() {
         <NextButton
           handleChange={handleChange}
           buttonText={currentStep === 1 ? 'Next' : 'Submit'}
+          isDisable={formSubmitted}
         />
         {error && (
-          <div className="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-md text-red-700 bg-red-100 border border-red-300 ">
-            <div className="text-xl font-normal  max-w-full flex-initial">
-              {error}
-            </div>
+          <div className="flex max-w-sm justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-md text-red-700 bg-red-100 border border-red-300 ">
+            <div className="text-xl font-normal flex-wrap">{error}</div>
           </div>
         )}
       </div>

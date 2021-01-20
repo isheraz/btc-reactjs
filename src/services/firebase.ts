@@ -1,5 +1,8 @@
 import { auth, firestore, storage } from '../firebase';
 
+const storageURL =
+  'https://firebasestorage.googleapis.com/v0/b/btc-reactjs.appspot.com/o/';
+
 const createUser = async (data: {
   firstName: string;
   lastName: string;
@@ -61,5 +64,18 @@ const uploadFile = async (
   }
 };
 
+const getUsers = async () => {
+  const users: any = [];
+  await firestore
+    .collection('users')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+    });
+  return users;
+};
+
 export default createUser;
-export { getUser };
+export { getUser, getUsers, storageURL };
